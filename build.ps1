@@ -484,28 +484,28 @@ else {
 # Restore Orig file if it exists and we've gotten this far in the build process
 # Implies that there is no running vagrant environment and that the current Vagrantfile is likely not our expected 'default' state
 if (Test-Path "$DL_DIR\Vagrant\Vagrantfile.orig") {
-	$CurrentDir = Get-Location
-    Set-Location "$DL_DIR\Vagrant"
-	Move-Item -Force Vagrantfile.orig Vagrantfile
-	Set-Location $CurrentDir
-}
-
-#Check if WorkstationCount or not
-if ($WorkstationCount -gt 1){
     $CurrentDir = Get-Location
     Set-Location "$DL_DIR\Vagrant"
-	$WorkstationCount = $WorkstationCount - 1
-	cp Vagrantfile Vagrantfile.orig
-	cat Vagrantfile | %{$_ -replace "0..0\).each do","0..$WorkstationCount).each do" | Out-File -Encoding ascii -Append Vagrantfile.tmp}
-	Move-Item -Force Vagrantfile.tmp Vagrantfile
-	Set-Location $CurrentDir
-	$counter = $WorkstationCount
-	while($counter -ge 0){
-	  $LAB_HOSTS += "win10-$counter"
-	  $counter = $counter - 1
-	}
-} else {
-	$LAB_HOSTS += 'win10-0'
+    Move-Item -Force Vagrantfile.orig Vagrantfile  # restore contents
+    Set-Location $CurrentDir
+}
+
+if ($WorkstationCount -gt 1) {  # only make changes to Vagrantfile if necessary
+    $WorkstationCount -= 1  # adjust for zero index
+    $CurrentDir = Get-Location
+    Set-Location "$DL_DIR\Vagrant"
+    Copy-Item Vagrantfile Vagrantfile.orig  # backup contents
+    Get-Content Vagrantfile | %{$_ -replace "0..0\).each do","0..$WorkstationCount).each do" | Set-Content Vagrantfile
+    Set-Location $CurrentDir
+
+    $counter = 0
+    while($counter -le $WorkstationCount) {
+      $LAB_HOSTS += "win10-$counter"
+      $counter += 1
+    }
+}
+else {
+    $LAB_HOSTS += 'win10-0'
 }
 
 # Vagrant up each infrasturcture box and attempt to reload one time if it fails
@@ -532,5 +532,4 @@ forEach ($VAGRANT_HOST in $LAB_HOSTS) {
 Write-Verbose "[main] Running post_build_checks"
 post_build_checks
 Write-Verbose "[main] Finished post_build_checks"
-
 
