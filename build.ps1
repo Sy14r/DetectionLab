@@ -501,13 +501,11 @@ if ($WorkstationCount -gt 1){
 	Set-Location $CurrentDir
 	$counter = $WorkstationCount
 	while($counter -ge 0){
-	  $HOLDER = $LAB_HOSTS + "win10-$counter"
-	  $LAB_HOSTS = $HOLDER
+	  $LAB_HOSTS += "win10-$counter"
 	  $counter = $counter - 1
 	}
 } else {
-	$HOLDER = $LAB_HOSTS + 'win10-0'
-	$LAB_HOSTS = $HOLDER
+	$LAB_HOSTS += 'win10-0'
 }
 
 # Vagrant up each infrasturcture box and attempt to reload one time if it fails

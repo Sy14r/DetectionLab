@@ -15,7 +15,8 @@
       "cpu": "2",
       "switch_name": "{{user `switch_name`}}",
       "guest_additions_mode": "none",
-      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "shutdown_command": "C:/Windows/packer/PackerShutdown.bat",
+	  "shutdown_timeout": "1h",
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
         "{{user `autounattend`}}",
@@ -29,7 +30,8 @@
         "./scripts/disable-winrm.ps1",
         "./scripts/enable-winrm.ps1",
         "./scripts/microsoft-updates.bat",
-        "./scripts/win-updates.ps1"
+        "./scripts/win-updates.ps1",
+		"./scripts/save_shutdown_command.ps1"
       ]
     },
     {
@@ -45,7 +47,8 @@
       "winrm_username": "vagrant",
       "winrm_password": "vagrant",
       "winrm_timeout": "4h",
-      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "shutdown_command": "C:/Windows/packer/PackerShutdown.bat",
+	  "shutdown_timeout": "1h",
       "guest_os_type": "windows9-64",
       "disk_size": "{{user `disk_size`}}",
       "vnc_port_min": 5900,
@@ -63,7 +66,8 @@
         "./scripts/disable-winrm.ps1",
         "./scripts/enable-winrm.ps1",
         "./scripts/microsoft-updates.bat",
-        "./scripts/win-updates.ps1"
+        "./scripts/win-updates.ps1",
+		"./scripts/save_shutdown_command.ps1"
       ],
       "vmx_data": {
         "RemoteDisplay.vnc.enabled": "false",
@@ -86,7 +90,8 @@
       "winrm_username": "vagrant",
       "winrm_password": "vagrant",
       "winrm_timeout": "4h",
-      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "shutdown_command": "C:/Windows/packer/PackerShutdown.bat",
+	  "shutdown_timeout": "1h",
       "guest_os_type": "Windows81_64",
       "guest_additions_mode": "disable",
       "disk_size": "{{user `disk_size`}}",
@@ -103,7 +108,8 @@
         "./scripts/enable-winrm.ps1",
         "./scripts/microsoft-updates.bat",
         "./scripts/win-updates.ps1",
-        "./scripts/oracle-cert.cer"
+        "./scripts/oracle-cert.cer",
+		"./scripts/save_shutdown_command.ps1"
       ],
       "vboxmanage": [
         [
@@ -159,7 +165,11 @@
         "./scripts/set-winrm-automatic.bat",
         "./scripts/compact.bat"
       ]
-    }
+    },
+	{
+	  "type": "powershell",
+	  "script": "./scripts/save_shutdown_command.ps1"
+	}
   ],
   "post-processors": [
     {
