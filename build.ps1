@@ -532,4 +532,3 @@ forEach ($VAGRANT_HOST in $LAB_HOSTS) {
 Write-Verbose "[main] Running post_build_checks"
 post_build_checks
 Write-Verbose "[main] Finished post_build_checks"
-
