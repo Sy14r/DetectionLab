@@ -15,24 +15,11 @@
       "cpu": "2",
       "switch_name": "{{user `switch_name`}}",
       "guest_additions_mode": "none",
-      "shutdown_command": "a:/sysprep.bat",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
 	  "shutdown_timeout": "1h",
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
-        "{{user `autounattend`}}",
-        "./scripts/sysprep.bat",
-        "./scripts/unattend.xml",
-        "./floppy/WindowsPowershell.lnk",
-        "./floppy/PinTo10.exe",
-        "./scripts/fixnetwork.ps1",
-        "./scripts/MakeWindows10GreatAgain.ps1",
-        "./scripts/MakeWindows10GreatAgain.reg",
-        "./scripts/rearm-windows.ps1",
-        "./scripts/disable-screensaver.ps1",
-        "./scripts/disable-winrm.ps1",
-        "./scripts/enable-winrm.ps1",
-        "./scripts/microsoft-updates.bat",
-        "./scripts/win-updates.ps1"
+        "{{user `autounattend`}}"
       ]
     },
     {
@@ -48,7 +35,7 @@
       "winrm_username": "vagrant",
       "winrm_password": "vagrant",
       "winrm_timeout": "4h",
-      "shutdown_command": "a:/sysprep.bat",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
 	  "shutdown_timeout": "1h",
       "guest_os_type": "windows9-64",
       "disk_size": "{{user `disk_size`}}",
@@ -56,20 +43,7 @@
       "vnc_port_max": 5980,
       "version": 11,
       "floppy_files": [
-        "{{user `autounattend`}}",
-        "./scripts/sysprep.bat",
-        "./scripts/unattend.xml",
-        "./floppy/WindowsPowershell.lnk",
-        "./floppy/PinTo10.exe",
-        "./scripts/fixnetwork.ps1",
-        "./scripts/MakeWindows10GreatAgain.ps1",
-        "./scripts/MakeWindows10GreatAgain.reg",
-        "./scripts/rearm-windows.ps1",
-        "./scripts/disable-screensaver.ps1",
-        "./scripts/disable-winrm.ps1",
-        "./scripts/enable-winrm.ps1",
-        "./scripts/microsoft-updates.bat",
-        "./scripts/win-updates.ps1"
+        "{{user `autounattend`}}"
       ],
       "vmx_data": {
         "RemoteDisplay.vnc.enabled": "false",
@@ -92,15 +66,13 @@
       "winrm_username": "vagrant",
       "winrm_password": "vagrant",
       "winrm_timeout": "4h",
-      "shutdown_command": "a:/sysprep.bat",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
 	  "shutdown_timeout": "1h",
       "guest_os_type": "Windows81_64",
       "guest_additions_mode": "disable",
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
         "{{user `autounattend`}}",
-        "./scripts/sysprep.bat",
-        "./scripts/unattend.xml",
         "./floppy/WindowsPowershell.lnk",
         "./floppy/PinTo10.exe",
         "./scripts/fixnetwork.ps1",
@@ -112,7 +84,8 @@
         "./scripts/enable-winrm.ps1",
         "./scripts/microsoft-updates.bat",
         "./scripts/win-updates.ps1",
-        "./scripts/oracle-cert.cer"
+        "./scripts/oracle-cert.cer",
+		    "./scripts/save_shutdown_command.ps1"
       ],
       "vboxmanage": [
         [
@@ -169,11 +142,10 @@
         "./scripts/compact.bat"
       ]
     },
-    {
-      "type": "file",
-      "source": "./answer_files/10/Autounattend_sysprep.xml",
-      "destination": "c:/Windows/Temp/Autounattend_sysprep.xml"
-    }
+	{
+	  "type": "powershell",
+	  "script": "./scripts/save_shutdown_command.ps1"
+	}
   ],
   "post-processors": [
     {

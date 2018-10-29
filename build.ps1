@@ -140,7 +140,7 @@ function check_vmware_workstation_installed {
 
 function check_vmware_vagrant_plugin_installed {
   Write-Verbose '[check_vmware_vagrant_plugin_installed] Running..'
-  if (vagrant plugin list | Select-String 'vagrant-vmware-desktop') {
+  if (vagrant plugin list | Select-String 'vagrant-vmware-workstation') {
     Write-Verbose 'The vagrant VMware Workstation plugin is no longer supported.'
     Write-Verbose 'Please upgrade to the VMware Desktop plugin: https://www.vagrantup.com/docs/vmware/installation.html'
     return $false
@@ -490,12 +490,13 @@ if (Test-Path "$DL_DIR\Vagrant\Vagrantfile.orig") {
     Set-Location $CurrentDir
 }
 
-if ($WorkstationCount -gt 1) {  # only make changes to Vagrantfile if necessary
+if ($WorkstationCount -gt 1) { # only make changes to Vagrantfile if necessary
     $WorkstationCount -= 1  # adjust for zero index
     $CurrentDir = Get-Location
     Set-Location "$DL_DIR\Vagrant"
     Copy-Item Vagrantfile Vagrantfile.orig  # backup contents
-    Get-Content Vagrantfile | %{$_ -replace "0..0\).each do","0..$WorkstationCount).each do" | Set-Content Vagrantfile
+    Get-Content Vagrantfile | %{$_ -replace "0..0\).each do","0..$WorkstationCount).each do" } | Set-Content Vagrantfile.tmp # create the tmp modified file
+    Move-Item -Force Vagrantfile.tmp Vagrantfile # move the modified over running copy
     Set-Location $CurrentDir
 
     $counter = 0
